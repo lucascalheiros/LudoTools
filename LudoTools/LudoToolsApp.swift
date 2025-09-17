@@ -10,18 +10,12 @@ import SwiftData
 
 @main
 struct LudoToolsApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+    @Inject(ModelContainer.self)
+    var sharedModelContainer: ModelContainer
 
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+    init() {
+        ModuleRegister().register()
+    }
 
     var body: some Scene {
         WindowGroup {
