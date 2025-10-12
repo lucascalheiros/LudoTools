@@ -58,7 +58,7 @@ struct GameCollectionModel: BasicGameInfo, Codable, Identifiable {
         case tags
     }
 
-    struct Tag: Codable, Identifiable {
+    struct Tag: Codable, Identifiable, Hashable {
         let id: Int
         let nmTag: String
 

@@ -5,14 +5,14 @@
 //  Created by Lucas Calheiros on 12/08/25.
 //
 
-struct UserResponse: Codable {
-    let idUsuario: Int
-    let usuario: String
+struct UserResponse: Identifiable, Codable {
+    let id: Int
+    let user: String
     let thumb: String
 
     enum CodingKeys: String, CodingKey {
-        case idUsuario = "id_usuario"
-        case usuario
+        case id = "id_usuario"
+        case user = "usuario"
         case thumb
     }
 }

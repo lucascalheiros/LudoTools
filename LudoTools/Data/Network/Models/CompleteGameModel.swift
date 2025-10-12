@@ -49,7 +49,7 @@ struct CompleteGameModel: BasicGameInfo, Identifiable, Codable {
 }
 
 extension CompleteGameModel {
-    struct Mechanic: Codable {
+    struct Mechanic: Codable, Hashable {
         let id: Int
         let name: String
 
@@ -59,7 +59,7 @@ extension CompleteGameModel {
         }
     }
 
-    struct Category: Codable {
+    struct Category: Codable, Hashable {
         let id: Int
         let name: String
 
@@ -69,7 +69,7 @@ extension CompleteGameModel {
         }
     }
 
-    struct Theme: Codable {
+    struct Theme: Codable, Hashable {
         let id: Int
         let name: String
 
@@ -79,7 +79,7 @@ extension CompleteGameModel {
         }
     }
 
-    struct Professional: Codable {
+    struct Professional: Codable, Hashable {
         let id: Int
         let name: String
 
