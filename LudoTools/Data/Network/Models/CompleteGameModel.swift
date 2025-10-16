@@ -1,4 +1,4 @@
-struct CompleteGameModel: BasicGameInfo, Identifiable, Codable {
+struct CompleteGameModel: LudopediaGame, Identifiable, Codable {
     let id: Int
     let name: String
     let thumb: String
@@ -15,12 +15,15 @@ struct CompleteGameModel: BasicGameInfo, Identifiable, Codable {
     let favoriteCount: Int?
     let wantedCount: Int?
     let playedCount: Int?
-
     let mechanics: [Mechanic]
     let categories: [Category]
     let themes: [Theme]
     let artists: [Professional]
     let designers: [Professional]
+
+    func toGameInfo() -> GameInfo {
+        GameInfo(id: id, name: name, thumb: thumb, link: link)
+    }
 
     enum CodingKeys: String, CodingKey {
         case id = "id_jogo"

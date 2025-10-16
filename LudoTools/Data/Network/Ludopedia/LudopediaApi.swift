@@ -73,12 +73,27 @@ final class LudopediaApi {
     func getUsers(
         _ search: String,
         _ pageInfo: PageInfo
-    ) async -> Result<[UserResponse], NetworkError> {
+    ) async -> Result<UserResponse, NetworkError> {
         var query: [String: String?] = ["search":search]
         query.merge(pageInfo.asDictionary() ?? [:]) { $1 }
         return await request(ApiEntry(
             .get,
             "api/v1/usuarios",
+            auth: .bearer,
+            query: query
+        ))
+    }
+
+    func getMatches(
+        _ params: GetMatchesParams,
+        _ pageInfo: PageInfo
+    ) async -> Result<MatchesResponse, NetworkError> {
+        var query: [String: String?] = [:]
+        query.merge(params.asDictionary() ?? [:]) { $1 }
+        query.merge(pageInfo.asDictionary() ?? [:]) { $1 }
+        return await request(ApiEntry(
+            .get,
+            "api/v1/partidas",
             auth: .bearer,
             query: query
         ))

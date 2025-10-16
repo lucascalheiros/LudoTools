@@ -21,7 +21,7 @@ struct GameCollectionResponse: Codable, PaginatedResponse{
     }
 }
 
-struct GameCollectionModel: BasicGameInfo, Codable, Identifiable {
+struct GameCollectionModel: LudopediaGame, Codable, Identifiable {
     let idUsuarioJogo: Int?
     let id: Int
     let name: String
@@ -38,6 +38,10 @@ struct GameCollectionModel: BasicGameInfo, Codable, Identifiable {
     let qtPartidas: Int?
     let vlCusto: Double?
     let tags: [Tag]
+
+    func toGameInfo() -> GameInfo {
+        GameInfo(id: id, name: name, thumb: thumb, link: link)
+    }
 
     enum CodingKeys: String, CodingKey {
         case idUsuarioJogo = "id_usuario_jogo"

@@ -10,7 +10,59 @@ import SwiftData
 
 struct ScoringScreen: View {
     @Bindable var scoringEntity: ScoringEntity
+
     @Environment(\.modelContext) private var context
+
+    @State var showPlayerPicker = false
+
+    var body: some View {
+        ZStack {
+            Color.background.ignoresSafeArea().onTapGesture {
+                UIApplication.shared.hideKeyboard()
+            }
+
+            ScrollView {
+                LazyVStack {
+                    header()
+                        .padding()
+                    ForEach(scoringEntity.playerScoreEntries.sorted(by: { $0.displayName < $1.displayName})) { value in
+                        PlayerScoreView(entry: value) {
+                            scoringEntity.playerScoreEntries.removeAll(where: { $0 == value })
+                        }
+                        .padding(.horizontal)
+                    }
+                    HStack {
+                        button("Add Player") {
+                             showPlayerPicker = true
+                        }
+                        button("Add Guest") {
+                            addEntryForGuest()
+                        }
+                    }
+                    .foregroundColor(Color.onPrimaryContainer)
+                    .padding(.horizontal)
+                }
+            }
+        }
+        .navigationTitle(scoringEntity.name)
+        .navigationBarTitleDisplayMode(.inline)
+        .onDisappear {
+            if scoringEntity.name.isEmpty {
+                scoringEntity.name = "Unamed"
+            }
+        }
+        .sheet(isPresented: $showPlayerPicker) {
+            PlayerPickerBottomSheet(
+                selectOption: .single,
+                onSelected: { players in
+                    showPlayerPicker = false
+                    withAnimation {
+                        players.forEach(addEntryForPlayer)
+                    }
+                }
+            )
+        }
+    }
 
     func scoreBoard() -> [(pos: Int, name: String, score: Int)] {
         scoringEntity.sortedPlayerScoreEntries
@@ -24,7 +76,8 @@ struct ScoringScreen: View {
     @ViewBuilder
     func playerResults() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            ForEach(Array(scoreBoard().enumerated()), id: \.element.name) { index, entry in
+            let scores = scoreBoard()
+            ForEach(Array(scores.enumerated()), id: \.element.name) { index, entry in
                 let (pos, name, score) = entry
 
                 VStack(alignment: .leading, spacing: 0) {
@@ -32,18 +85,13 @@ struct ScoringScreen: View {
                         .lineLimit(1)
                         .frame(maxWidth: .infinity, alignment: .leading)
 
-                    if index < scoreBoard().count - 1 {
+                    if index < scores.count - 1 {
                         Divider()
                     }
                 }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal)
-        .background {
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Color.gray)
-        }
     }
 
     @ViewBuilder
@@ -66,15 +114,14 @@ struct ScoringScreen: View {
                     }
                 }
                 .frame(maxWidth: .infinity)
-
             }
         }
     }
 
     @ViewBuilder
-    func button(_ text: String, onTap: () -> Void) -> some View {
-        Button("Add Player") {
-
+    func button(_ text: String, onTap: @escaping () -> Void) -> some View {
+        Button(text) {
+            onTap()
         }
         .frame(maxWidth: .infinity)
         .padding()
@@ -84,100 +131,17 @@ struct ScoringScreen: View {
         }
     }
 
-    var body: some View {
-        ZStack {
-            Color.background.ignoresSafeArea().onTapGesture {
-                UIApplication.shared.hideKeyboard()
-            }
-
-            ScrollView {
-                LazyVStack {
-                    header()
-                        .padding()
-                    ForEach(scoringEntity.playerScoreEntries) { value in
-                        PlayerScoreView(entry: value) {
-                            context.delete(value)
-                        }
-                        .padding(.horizontal)
-                    }
-                    HStack {
-                        button("Add Player") {
-
-                        }
-                        button("Add Guest") {
-                            addEntryForGuest()
-                        }
-                    }
-                    .foregroundColor(Color.onPrimaryContainer)
-                    .padding(.horizontal)
-                }
-            }
-        }
-        .navigationTitle(scoringEntity.name)
-        .navigationBarTitleDisplayMode(.inline)
-        .onDisappear {
-            if scoringEntity.name.isEmpty {
-                scoringEntity.name = "Unamed"
-            }
-        }
-    }
-
     private func addEntryForGuest() {
         scoringEntity.playerEntriesAdded += 1
         scoringEntity.playerScoreEntries.append(PlayerScoreEntry(type: .guest, playerName: "Player \(scoringEntity.playerEntriesAdded)"))
     }
 
     private func addEntryForPlayer(_ player: PlayerInfo) {
+        if scoringEntity.players.contains(player) {
+            return
+        }
         scoringEntity.playerEntriesAdded += 1
         scoringEntity.playerScoreEntries.append(PlayerScoreEntry(type: .registered, playerInfo: player))
     }
 }
 
-struct PlayerScoreView: View {
-    @Bindable var entry: PlayerScoreEntry
-    var incrementDecrementOptions: [Int] = [-1, -5, -10, 10, 5, 1]
-    var onRemoved: () -> Void
-
-    var body: some View {
-        VStack {
-            HStack {
-                switch entry.type {
-                case .guest:
-                    TextField("", text: $entry.playerName)
-                        .fixedSize()
-                case .registered:
-                    Label("\(entry.displayName)", systemImage: "checkmark.circle.fill")
-                }
-                Spacer()
-                TextField("", value: $entry.score, format: .number)
-                    .keyboardType(.numberPad)
-                    .fixedSize()
-            }
-            .font(.title)
-            LazyHStack {
-                ForEach(incrementDecrementOptions, id: \.self) { value in
-                    Button((value > 0 ? "+" : "") + String(value)) {
-                        entry.score += value
-                    }
-                    .padding()
-                    .background {
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(value > 0 ? Color.green : Color.red)
-                    }
-                }
-            }
-        }
-        .padding()
-        .background {
-            RoundedRectangle(cornerRadius: 16)
-                .fill(.gray)
-        }
-        .contextMenu {
-            Button(role: .destructive) {
-                onRemoved()
-            } label: {
-                Label("Remove", systemImage: "trash")
-            }
-        }
-    }
-}

@@ -10,10 +10,10 @@ import SwiftData
 @Model
 class PlayerInfo {
     var name: String
-    var ludopediaId: String
+    var ludoUser: LudoUser?
 
-    init(name: String, ludopediaId: String) {
+    init(name: String, ludoUser: LudoUser?) {
         self.name = name
-        self.ludopediaId = ludopediaId
+        self.ludoUser = ludoUser
     }
 }

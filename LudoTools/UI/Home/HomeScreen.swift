@@ -14,56 +14,7 @@ struct HomeScreen: View {
 
     @State private var currentNavTarget: NavTarget?
 
-    @State private var game: BasicGameInfo?
-
     @StateObject private var homeVM: HomeVM = .init()
-
-    @ViewBuilder
-    func gameSearchInput() -> some View {
-        HStack {
-            TextField("Search games", text: $homeVM.searchText)
-            if !homeVM.searchText.isEmpty {
-                Button {
-                    homeVM.searchText = ""
-                } label: {
-                    Image(systemName: "xmark")
-                }
-            }
-        }
-        .padding()
-        .foregroundColor(Color.onTertiaryContainer)
-        .background {
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Color.tertiaryContainer)
-        }
-        .padding()
-    }
-
-    @ViewBuilder
-    func mainOptionsGrid() -> some View {
-        Grid {
-            GridRow {
-                card("New match") {
-                    currentNavTarget = .newMatch
-                }
-                card("New score") {
-                    let score = ScoringEntity()
-                    context.insert(score)
-                    currentNavTarget = .newScore(score)
-                }
-            }
-            GridRow {
-                card("Players") {
-                    currentNavTarget = .players
-                }
-                card("Scores") {
-                    currentNavTarget = .scores
-                }
-            }
-        }
-        .padding(.horizontal)
-        .frame(maxWidth: .infinity)
-    }
 
     var body: some View {
         NavigationView {
@@ -79,7 +30,8 @@ struct HomeScreen: View {
                         .overlay(alignment: .centerLastTextBaseline ) {
                             if !homeVM.searchText.isEmpty {
                                 GamePickerView(
-                                    query: GameQueryOptions.allGames(.init(search: homeVM.searchText, type: .base, baseGameId: nil))
+                                    query: GetGamesSlice.GameQueryOptions.allGames(.init(search: homeVM.searchText, type: .base, baseGameId: nil)),
+                                    selectOptions: .single
                                 )
                                 .frame(maxHeight: 300)
                                 .background(
@@ -109,7 +61,7 @@ struct HomeScreen: View {
         switch target {
         case .newMatch:
             NavigationView {
-                MatchScreen(game: $game)
+                MatchScreen()
                     .toolbar {
                         ToolbarItem(placement: .navigationBarLeading) {
                             Button(action: { dismissNav() }) {
@@ -150,6 +102,53 @@ struct HomeScreen: View {
             .onTapGesture {
                 onTap?()
             }
+    }
+
+    @ViewBuilder
+    private func gameSearchInput() -> some View {
+        HStack {
+            TextField("Search games", text: $homeVM.searchText)
+            if !homeVM.searchText.isEmpty {
+                Button {
+                    homeVM.searchText = ""
+                } label: {
+                    Image(systemName: "xmark")
+                }
+            }
+        }
+        .padding()
+        .foregroundColor(Color.onTertiaryContainer)
+        .background {
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.tertiaryContainer)
+        }
+        .padding()
+    }
+
+    @ViewBuilder
+    private func mainOptionsGrid() -> some View {
+        Grid {
+            GridRow {
+                card("New match") {
+                    currentNavTarget = .newMatch
+                }
+                card("New score") {
+                    let score = ScoringEntity()
+                    context.insert(score)
+                    currentNavTarget = .newScore(score)
+                }
+            }
+            GridRow {
+                card("Players") {
+                    currentNavTarget = .players
+                }
+                card("Scores") {
+                    currentNavTarget = .scores
+                }
+            }
+        }
+        .padding(.horizontal)
+        .frame(maxWidth: .infinity)
     }
 }
 

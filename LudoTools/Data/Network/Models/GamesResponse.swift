@@ -17,13 +17,16 @@ struct GamesResponse: Codable, PaginatedResponse {
     }
 }
 
-
-struct SimpleGameModel: BasicGameInfo, Codable, Identifiable {
+struct SimpleGameModel: LudopediaGame, Codable, Identifiable {
     let id: Int
     let name: String
-    let nmOriginal: String
+    let nmOriginal: String?
     let thumb: String
     let link: String
+
+    func toGameInfo() -> GameInfo {
+        GameInfo(id: id, name: name, thumb: thumb, link: link)
+    }
 
     enum CodingKeys: String, CodingKey {
         case id = "id_jogo"

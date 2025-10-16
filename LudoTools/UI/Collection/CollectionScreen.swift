@@ -9,16 +9,8 @@ import SwiftUI
 import Kingfisher
 
 struct CollectionScreen: View {
-    @State private var playerCount = 0
-    @State private var gameType = GameType.all
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
-    @State var userGames: [GameCollectionModel] = []
-    var params: GetCollectionParams {
-        .init(collectionType: .collection, search: nil, type: gameType, sort: nil, playerCount: playerCount == 0 ? nil : playerCount)
-    }
-
-    @Inject(GameCollectionRepository.self)
-    var repository: GameCollectionRepository
+    @StateObject var viewModel = CollectionVM()
 
     var body: some View {
         NavigationView {
@@ -26,12 +18,12 @@ struct CollectionScreen: View {
                 Color.background.ignoresSafeArea()
                 VStack {
                     HStack {
-                        Picker("Game type", selection: $gameType) {
+                        Picker("Game type", selection: $viewModel.gameType) {
                             Text("All").tag(GameType.all)
                             Text("Base").tag(GameType.base)
                             Text("Expansion").tag(GameType.expansion)
                         }.pickerStyle(.segmented)
-                        Picker("Games for", selection: $playerCount) {
+                        Picker("Games for", selection: $viewModel.playerCount) {
                             Label("Any", systemImage: "person.3.fill").tag(0)
                             Label("1", systemImage: "person.fill").tag(1)
                             Label("2", systemImage: "person.2.fill").tag(2)
@@ -45,7 +37,7 @@ struct CollectionScreen: View {
 
                     ScrollView {
                         LazyVGrid(columns: columns) {
-                            ForEach(Array(userGames.enumerated()), id: \.element.id) { index, game in
+                            ForEach(Array(viewModel.userGames.enumerated()), id: \.element.id) { index, game in
                                 VStack {
                                     KFImage.url(URL(string: game.thumb))
                                         .resizable()
@@ -57,10 +49,8 @@ struct CollectionScreen: View {
                                 }
                                 .padding()
                                 .onAppear {
-                                    if index == userGames.count - 10 {
-                                        Task {
-                                            await repository.loadMoreGames(params)
-                                        }
+                                    if index == viewModel.userGames.count - 10 {
+                                        viewModel.loadMoreGames()
                                     }
                                 }
                             }
@@ -71,11 +61,6 @@ struct CollectionScreen: View {
                 }
             }
             .navigationTitle("Collection")
-        }.task(id: params) {
-            await repository.loadMoreGames(params)
-        }
-        .onReceive(repository.gamesPublisher(params).receive(on: RunLoop.main).eraseToAnyPublisher()) {
-            userGames = $0
         }
     }
 }

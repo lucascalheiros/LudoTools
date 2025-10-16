@@ -1,13 +1,18 @@
 //
-//  BasicGameInfo.swift
+//  LudopediaGame.swift
 //  LudoTools
 //
 //  Created by Lucas Calheiros on 12/09/25.
 //
 
-protocol BasicGameInfo: Hashable {
-    var id: Int { get }
-    var name: String { get }
-    var thumb: String { get }
-    var link: String { get }
+protocol LudopediaGame: Hashable {
+    func toGameInfo() -> GameInfo
+}
+
+
+struct GameInfo: Hashable {
+    var id: Int
+    var name: String
+    var thumb: String
+    var link: String
 }

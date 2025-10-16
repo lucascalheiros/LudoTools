@@ -31,6 +31,7 @@ extension Encodable {
                 case let v as UInt32: return String(v)
                 case let v as UInt64: return String(v)
                 case let v as Date: return ISO8601DateFormatter().string(from: v)
+                case let v as DayDate: return v.isoDate
                 default:
                     return nil
                 }

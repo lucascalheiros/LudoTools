@@ -17,7 +17,7 @@ final class Container: Resolver {
         invalidate(forKey: Key(type, name))
     }
 
-    func register<T>(_ scope: ScopeOption, _ type: T.Type, _ name: String? = nil, factory: @escaping Factory) {
+    func register<T>(_ scope: ScopeOption, _ type: T.Type, _ name: String? = nil, _ factory: @escaping Factory) {
         let key = Key(type, name)
         factories[key] = ObjectScopedFactory(scope: scope, factory: factory)
         invalidate(forKey: key)
@@ -27,6 +27,10 @@ final class Container: Resolver {
         register(scope, type, name) { _ in
             factory()
         }
+    }
+
+    func register<T>(_ scope: ScopeOption, _ type: T.Type, _ factory: @escaping Factory) {
+        register(scope, type, nil, factory)
     }
 
     func register<T>(_ scope: ScopeOption, _ type: T.Type, _ factory: @escaping () -> T) {
@@ -42,7 +46,7 @@ final class Container: Resolver {
     func resolve<T>(_ type: T.Type, _ name: String? = nil, scope: Scope? = nil) -> T {
         let key = Key(type, name)
         guard let objectScopedFactory = factories[key] else {
-            fatalError("No factory registered for \(key)")
+            fatalError("No factory registered for \(type)")
         }
         let factory = objectScopedFactory.factory
         switch objectScopedFactory.scope {

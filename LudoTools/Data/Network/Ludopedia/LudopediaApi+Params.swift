@@ -18,11 +18,11 @@ struct GetGamesParams: Codable, Hashable {
 }
 
 struct GetCollectionParams: Codable, Hashable {
-    let collectionType: CollectionType
-    let search: String?
-    let type: GameType
-    let sort: String?
-    let playerCount: Int?
+    var collectionType: CollectionType
+    var search: String?
+    var type: GameType
+    var sort: String?
+    var playerCount: Int?
 
     enum CodingKeys: String, CodingKey {
         case collectionType = "lista"
@@ -57,4 +57,32 @@ enum CollectionType: String, Codable {
     case commented = "comentados"
     case graded = "notas"
     case played = "jogados"
+}
+
+struct GetMatchesParams: Codable, Hashable {
+    let startDate: DayDate?
+    let endDate: DayDate?
+    let gameId: String?
+    let playerId: Int?
+    let guestPlayer: String?
+    let weekday: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case startDate = "dt_ini"
+        case endDate = "dt_fim"
+        case gameId = "id_jogo"
+        case playerId = "id_usuario_jogador"
+        case guestPlayer = "jogador"
+        case weekday = "weekday"
+    }
+}
+
+struct DayDate: Codable, Hashable {
+    let year: Int
+    let month: Int
+    let day: Int
+
+    var isoDate: String {
+        return "\(year)-\(month)-\(day)"
+    }
 }

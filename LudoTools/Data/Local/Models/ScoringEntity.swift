@@ -23,7 +23,7 @@ class ScoringEntity {
         let grouped = Dictionary(grouping: playerScoreEntries, by: { $0.score })
 
         let sortedGroups = grouped.keys.sorted(by: >).map { score in
-            (score, grouped[score]!)
+            (score, grouped[score]!.sorted(by: { $0.displayName < $1.displayName }))
         }
 
         switch nonNullScoringType {
@@ -32,6 +32,9 @@ class ScoringEntity {
         case .lessPoints:
             return sortedGroups.reversed()
         }
+    }
+    var players: [PlayerInfo] {
+        playerScoreEntries.compactMap { $0.playerInfo }
     }
 
     init(id: UUID = UUID(), name: String = "Unamed", date: Date = Date(), playerEntriesAdded: Int = 0, playerScoreEntries: [PlayerScoreEntry] = [],
