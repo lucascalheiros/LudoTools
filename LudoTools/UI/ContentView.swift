@@ -52,7 +52,7 @@ struct ContentView: View {
     }
 }
 
-fileprivate enum StartupState {
+private enum StartupState {
     case loading
     case loggedIn
     case loggedOut

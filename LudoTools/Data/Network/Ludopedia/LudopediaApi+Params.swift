@@ -10,6 +10,12 @@ struct GetGamesParams: Codable, Hashable {
     let type: GameType
     let baseGameId: Int?
 
+    init(search: String? = nil, type: GameType = .all, baseGameId: Int? = nil) {
+        self.search = search
+        self.type = type
+        self.baseGameId = baseGameId
+    }
+
     enum CodingKeys: String, CodingKey {
         case search = "search"
         case type = "tp_jogo"
@@ -21,8 +27,22 @@ struct GetCollectionParams: Codable, Hashable {
     var collectionType: CollectionType
     var search: String?
     var type: GameType
-    var sort: String?
+    var sort: CollectionSort?
     var playerCount: Int?
+
+    init(
+        collectionType: CollectionType,
+        search: String? = nil,
+        type: GameType = .all,
+        sort: CollectionSort? = nil,
+        playerCount: Int? = nil
+    ) {
+        self.collectionType = collectionType
+        self.search = search
+        self.type = type
+        self.sort = sort
+        self.playerCount = playerCount
+    }
 
     enum CodingKeys: String, CodingKey {
         case collectionType = "lista"
@@ -47,6 +67,13 @@ enum GameType: String, Codable {
     case all = ""
     case base = "b"
     case expansion = "e"
+}
+
+enum CollectionSort: String, Codable {
+    case name = "nome"
+    case rank
+    case rating = "nota"
+    case matches
 }
 
 enum CollectionType: String, Codable {

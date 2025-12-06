@@ -14,7 +14,7 @@ struct PlayerEditableSheet: View {
 
     @Environment(\.modelContext) private var context
 
-    @State var userInfo: LudoUserInfo? = nil
+    @State var userInfo: LudoUserInfo?
 
     @State var name: String = ""
 

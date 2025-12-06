@@ -20,4 +20,3 @@ class ScoreLogEntity {
         self.playerScoreEntry = playerScoreEntry
     }
 }
-

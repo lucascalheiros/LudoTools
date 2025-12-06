@@ -94,7 +94,6 @@ private enum NavTarget: Identifiable, Hashable {
     }
 }
 
-
 private extension Date {
     func formatted() -> String {
         let dateFormatter = DateFormatter()

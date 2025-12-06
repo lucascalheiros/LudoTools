@@ -35,4 +35,3 @@ class ReferenceWrapper<T> {
         case strong
     }
 }
-

@@ -29,7 +29,7 @@ struct ApiEntry {
         _ method: HttpMethod,
         _ path: String,
         auth: ApiAuth,
-        query: [String : String?] = [:],
+        query: [String: String?] = [:],
         body: Encodable? = nil
     ) {
         self.path = path

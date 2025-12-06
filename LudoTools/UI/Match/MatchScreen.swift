@@ -66,7 +66,11 @@ struct MatchScreen: View {
                 switch $0 {
                 case .gamePicker:
                     GamePickerBottomSheet(
-                        query: GetGamesSlice.GameQueryOptions.collection(.init(collectionType: .collection, search: nil, type: .base, sort: nil, playerCount: nil)),
+                        query: GetGamesSlice.GameQueryOptions.collection(.init(
+                            collectionType: .collection,
+                            type: .base,
+                            sort: .name
+                        )),
                         selectOptions: .single,
                         onSelected: { games in
                             viewModel.sheetState = nil
@@ -141,7 +145,7 @@ struct MatchScreen: View {
         if viewModel.game != nil {
             HStack {
                 if !viewModel.expansions.isEmpty {
-                    UIKitButton(uiImage: UIImage(systemName:  viewModel.showExpansions ? "chevron.up" : "chevron.down"), title: "\(viewModel.expansions.count) selected", onTap: {
+                    UIKitButton(uiImage: UIImage(systemName: viewModel.showExpansions ? "chevron.up" : "chevron.down"), title: "\(viewModel.expansions.count) selected", onTap: {
                         withAnimation {
                             viewModel.showExpansions = !viewModel.showExpansions
                         }
@@ -187,7 +191,7 @@ struct MatchScreen: View {
     private func playersSection() -> some View {
         HStack {
             if !viewModel.players.isEmpty {
-                UIKitButton(uiImage: UIImage(systemName:  viewModel.showPlayers ? "chevron.up" : "chevron.down"), title: "\(viewModel.players.count) selected", onTap: {
+                UIKitButton(uiImage: UIImage(systemName: viewModel.showPlayers ? "chevron.up" : "chevron.down"), title: "\(viewModel.players.count) selected", onTap: {
                     withAnimation {
                         viewModel.showPlayers = !viewModel.showPlayers
                     }

@@ -43,7 +43,7 @@ class GetGamesFromAllSlice {
     func loadMoreGames() async {
         guard let params else { return }
         isLoadingMoreGames = true
-        let _ = await gamesRepository.loadMoreGames(params)
+        await gamesRepository.loadMoreGames(params)
         isLoadingMoreGames = false
     }
 }

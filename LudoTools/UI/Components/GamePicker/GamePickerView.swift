@@ -61,7 +61,7 @@ struct GamePickerView: View {
                 })
             }
         }
-        .onChange(of: query) { old, new in
+        .onChange(of: query) { _, new in
             viewModel.updateQuery(new)
         }
     }

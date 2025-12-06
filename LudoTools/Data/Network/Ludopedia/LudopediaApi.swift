@@ -74,7 +74,7 @@ final class LudopediaApi {
         _ search: String,
         _ pageInfo: PageInfo
     ) async -> Result<UserResponse, NetworkError> {
-        var query: [String: String?] = ["search":search]
+        var query: [String: String?] = ["search": search]
         query.merge(pageInfo.asDictionary() ?? [:]) { $1 }
         return await request(ApiEntry(
             .get,

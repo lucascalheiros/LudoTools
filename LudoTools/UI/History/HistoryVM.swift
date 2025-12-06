@@ -32,7 +32,7 @@ class HistoryVM: ObservableObject {
 
     func loadMore() {
         Task {
-            let _ = await matchesRepository.loadMore(params)
+            await matchesRepository.loadMore(params)
         }
     }
 

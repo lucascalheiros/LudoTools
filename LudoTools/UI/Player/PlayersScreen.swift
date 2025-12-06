@@ -13,7 +13,7 @@ struct PlayersScreen: View {
 
     @Query(sort: [SortDescriptor(\PlayerInfo.name, order: .forward)]) var players: [PlayerInfo]
 
-    @State var playerEditableSheetState: PlayerEditableSheet.Context? = nil
+    @State var playerEditableSheetState: PlayerEditableSheet.Context?
 
     @Environment(\.modelContext) private var context
 

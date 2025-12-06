@@ -16,7 +16,7 @@ class MatchVM: ObservableObject {
     @Published var startDate = Date()
     @Published var finishedDate = Date()
     @Published var isMatchFinished = false
-    @Published var sheetState: SheetState? = nil
+    @Published var sheetState: SheetState?
     @Published var showGameExpansionPicker = false
     @Published var showExpansions = true
     @Published var showPlayers = true
@@ -77,9 +77,9 @@ class MatchVM: ObservableObject {
     enum SheetState: Identifiable {
         var id: String {
             switch self {
-                case .gamePicker: "gamePicker"
-                case .expansionPicker(let gameId): "expansionPicker(\(gameId))"
-                case .playerPicker: "playerPicker"
+            case .gamePicker: "gamePicker"
+            case .expansionPicker(let gameId): "expansionPicker(\(gameId))"
+            case .playerPicker: "playerPicker"
             }
         }
 

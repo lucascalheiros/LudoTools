@@ -34,7 +34,6 @@ class LoginUseCase {
     }
 }
 
-
 protocol ScopedDependency {
     init(scope: Resolver)
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GameCollectionResponse: Codable, PaginatedResponse{
+struct GameCollectionResponse: Codable, PaginatedResponse {
     let content: [GameCollectionModel]
     let qtBase: Int
     let qtExp: Int

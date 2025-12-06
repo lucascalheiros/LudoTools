@@ -8,6 +8,7 @@
 import Foundation
 
 extension Encodable {
+    // swiftlint:disable cyclomatic_complexity identifier_name
     func asDictionary() -> [String: String?]? {
         do {
             let data = try JSONEncoder().encode(self)
@@ -41,4 +42,6 @@ extension Encodable {
             return nil
         }
     }
+    // swiftlint:enable cyclomatic_complexity identifier_name
+
 }

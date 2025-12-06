@@ -9,7 +9,6 @@ protocol LudopediaGame: Hashable {
     func toGameInfo() -> GameInfo
 }
 
-
 struct GameInfo: Hashable {
     var id: Int
     var name: String

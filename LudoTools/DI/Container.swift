@@ -43,6 +43,7 @@ final class Container: Resolver {
         resolve(type, name, scope: nil)
     }
 
+    // swiftlint:disable force_cast
     func resolve<T>(_ type: T.Type, _ name: String? = nil, scope: Scope? = nil) -> T {
         let key = Key(type, name)
         guard let objectScopedFactory = factories[key] else {
@@ -89,6 +90,7 @@ final class Container: Resolver {
             }()
         }
     }
+    // swiftlint:enable force_cast
 
     func newScope() -> Scope {
         return Scope(container: self)
@@ -118,7 +120,7 @@ final class Container: Resolver {
     }
 }
 
-fileprivate struct Key: Hashable {
+private struct Key: Hashable {
     let objectIdentifier: ObjectIdentifier
     let name: String?
 
@@ -133,7 +135,7 @@ fileprivate struct Key: Hashable {
     }
 }
 
-fileprivate struct ObjectScopedFactory {
+private struct ObjectScopedFactory {
     let scope: Container.ScopeOption
     let factory: Container.Factory
 }

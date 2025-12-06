@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CustomAsyncImage<I: View, P: View>: View {
-    @State private var image: UIImage? = nil
+    @State private var image: UIImage?
     var url: URL
     var content: (Image) -> I
     var placeholder: () -> P

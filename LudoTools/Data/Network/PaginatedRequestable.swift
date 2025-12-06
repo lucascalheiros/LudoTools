@@ -42,6 +42,7 @@ actor PaginatedRequestable<Params: Hashable, Response: PaginatedResponse> {
         .eraseToAnyPublisher()
     }
 
+    @discardableResult
     func loadMore(_ params: Params) async -> Result<Bool, Never> {
         guard shouldLoadMore(params) else { return .success(false) }
         if let task = taskQueue[params] {

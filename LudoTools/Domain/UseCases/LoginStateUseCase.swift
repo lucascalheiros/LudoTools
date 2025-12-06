@@ -21,5 +21,3 @@ class LoginStateUseCase {
         authenticationRepository.loginStatePublisher.eraseToAnyPublisher()
     }
 }
-
-

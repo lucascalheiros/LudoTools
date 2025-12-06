@@ -8,13 +8,11 @@
 import Combine
 
 class LudoUsersRepository {
-
     private let requestable = {
         @Inject(LudopediaApi.self)
         var ludopediaApi: LudopediaApi
         return PaginatedRequestable(request: ludopediaApi.getUsers)
     }()
-
 
     func publisher(_ params: String) -> AnyPublisher<[UserModel], Never> {
         return requestable.dataPublisher(params)

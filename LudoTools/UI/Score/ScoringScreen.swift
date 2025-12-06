@@ -64,12 +64,12 @@ struct ScoringScreen: View {
         }
     }
 
-    func scoreBoard() -> [(pos: Int, name: String, score: Int)] {
+    func scoreBoard() -> [ScoreEntry] {
         scoringEntity.sortedPlayerScoreEntries
             .enumerated()
             .flatMap { index, element in
                 return element.players
-                    .map { (index + 1, $0.displayName, element.score) }
+                    .map { ScoreEntry(pos: index + 1, name: $0.displayName, score: element.score) }
             }
     }
 
@@ -78,10 +78,8 @@ struct ScoringScreen: View {
         VStack(alignment: .leading, spacing: 0) {
             let scores = scoreBoard()
             ForEach(Array(scores.enumerated()), id: \.element.name) { index, entry in
-                let (pos, name, score) = entry
-
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("\(pos). (\(score)) \(name)")
+                    Text("\(entry.pos). (\(entry.score)) \(entry.name)")
                         .lineLimit(1)
                         .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -143,5 +141,10 @@ struct ScoringScreen: View {
         scoringEntity.playerEntriesAdded += 1
         scoringEntity.playerScoreEntries.append(PlayerScoreEntry(type: .registered, playerInfo: player))
     }
-}
 
+    struct ScoreEntry {
+        let pos: Int
+        let name: String
+        let score: Int
+    }
+}

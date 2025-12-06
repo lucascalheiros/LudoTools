@@ -45,7 +45,6 @@ struct LoginScreen: View {
         }
     }
 
-
     private func requestOauth() {
         Task {
             await oauthHandler.requestOauth()

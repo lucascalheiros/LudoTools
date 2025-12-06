@@ -8,18 +8,17 @@
 import Combine
 
 class GamesRepository {
-
     private let requestable = {
         @Inject(LudopediaApi.self)
         var ludopediaApi: LudopediaApi
         return PaginatedRequestable(request: ludopediaApi.getGames)
     }()
 
-
     func gamesPublisher(_ params: GetGamesParams) -> AnyPublisher<[SimpleGameModel], Never> {
         return requestable.dataPublisher(params)
     }
 
+    @discardableResult
     func loadMoreGames(_ params: GetGamesParams) async -> Result<Bool, Never> {
         await requestable.loadMore(params)
     }
